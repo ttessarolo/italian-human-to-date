@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.0.5](https://bitbucket.org/ttessarolo/italian-human-to-date/branches/compare/v0.0.4%0Dv0.0.5) (2022-04-20)
+
+
+### Features
+
+* object is now a class and works with streams, callback and events ([eb5ad53](https://github.com/ttessarolo/italian-human-to-date/commits/eb5ad53f262ddb1eb6ba513b32e94a8fb9ec83d7))
+
 ### [0.0.4](https://bitbucket.org/ttessarolo/italian-human-to-date/branches/compare/v0.0.3%0Dv0.0.4) (2022-04-20)
 
 
