@@ -9,11 +9,9 @@ export const italianDateTerms = {
   tomorrow: ['domani'],
   after: ['dopo'],
   before: ['altro'],
-
   within: ['tra', 'fra'],
   ago: ['fa'],
   day: ['giorno', 'giorni'],
-
   afterTomorrow: ['dopodomani'],
   beforeYesterday: ['altroieri', 'avantieri'],
   week: ['settimana', 'settimane'],

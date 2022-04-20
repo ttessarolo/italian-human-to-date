@@ -35,7 +35,6 @@ export default function relativeAbsolute({
     const [isValid, type, index] = getDMYIndex(tokens, giorno, mese, anno);
 
     if (isValid) {
-      console.log('T', token, type, index);
       strips = new Set(index);
 
       const withinIndex = getIndexes(tokens, traFra);

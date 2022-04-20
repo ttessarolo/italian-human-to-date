@@ -3,45 +3,62 @@
 import natural from 'natural';
 import Events from 'events';
 import extractors from './extractors/index.js';
-import adjust from './lib/adjust.js';
+import adjust, {
+  removeDuplicateCharacters,
+  removePunctuation,
+  removeDiacritics,
+  stemWords,
+  trimWords,
+  stringToNumber,
+} from './lib/adjust.js';
 import { getTZDate } from './lib/dateUtils.js';
 import { italianDateTerms, extractorSequence } from './defaults.js';
 
+export {
+  adjust,
+  removeDuplicateCharacters,
+  removePunctuation,
+  removeDiacritics,
+  stemWords,
+  trimWords,
+  stringToNumber,
+  italianDateTerms,
+  extractorSequence,
+};
+
+// {vocabulary: italianDateTerms,
+// stripChar: '≈',
+// verbose: false,
+// textProcessor: {
+//   stemmer: 'PorterStemmerIt',
+//   stopwords: true,
+//   duplicate: false,
+//   diacritics: true,
+//   punctuation: true,
+//   lowercase: true,
+//   trim: true,
+//   tokenize: true,
+// }
+
 export default class DateExtractor extends Events {
-  constructor(
-    {
-      now,
-      timeZone,
-      sequence,
-      vocabulary,
-      textProcessor = {
-        stemmer: 'PorterStemmerIt',
-        stopwords: true,
-        duplicate: false,
-        diacritics: true,
-        punctuation: true,
-        lowercase: true,
-        trim: true,
-        tokenize: true,
-      },
-      stripChar = '≈',
-      verbose = false,
-    } = {
-      vocabulary: italianDateTerms,
-      stripChar: '≈',
-      verbose: false,
-      textProcessor: {
-        stemmer: 'PorterStemmerIt',
-        stopwords: true,
-        duplicate: false,
-        diacritics: true,
-        punctuation: true,
-        lowercase: true,
-        trim: true,
-        tokenize: true,
-      },
-    }
-  ) {
+  constructor({
+    now,
+    timeZone,
+    sequence,
+    vocabulary = italianDateTerms,
+    textProcessor = {
+      stemmer: 'PorterStemmerIt',
+      stopwords: true,
+      duplicate: false,
+      diacritics: true,
+      punctuation: true,
+      lowercase: true,
+      trim: true,
+      tokenize: true,
+    },
+    stripChar = '≈',
+    verbose = false,
+  } = {}) {
     super();
 
     this.vocabolario = {
@@ -72,6 +89,14 @@ export default class DateExtractor extends Events {
     this.sequence = sequence;
     this.stripChar = stripChar;
     this.verbose = verbose;
+  }
+
+  getNow() {
+    return this.now;
+  }
+
+  getSequence() {
+    return this.sequence ?? extractorSequence;
   }
 
   async extract(ingress, { now, timeZone, cb, outStream } = {}) {
@@ -105,13 +130,14 @@ export default class DateExtractor extends Events {
 
       if (this.verbose) console.log(date.map((d) => d.toString()));
 
+      const residualTokens = tokens.filter((k) => !(k === this.stripChar));
       const ret = {
         origin: data,
         dates: date,
         ranges: [...ranges.values()],
         adjustedTokes,
-        residualTokens: tokens.filter((k) => !(k === this.stripChar)),
-        strips: tokens,
+        residualTokens,
+        usedTokens: adjustedTokes.filter((k) => !residualTokens.includes(k)),
       };
 
       if (cb) cb(null, ret);
