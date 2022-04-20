@@ -13,7 +13,7 @@ export default function extractDates(
     now,
     timeZone,
     sequence,
-    vocabulary = defaults,
+    vocabulary,
     textProcessor = {
       stemmer: 'PorterStemmerIt',
       stopwords: true,
@@ -42,11 +42,6 @@ export default function extractDates(
     },
   }
 ) {
-  const tokens = adjust(data, textProcessor);
-  const today = getTZDate(now, timeZone);
-  const dates = new Map();
-  const ranges = new Map();
-
   const vocabolario = {
     prossimo: vocabulary.next.map((k) => natural[textProcessor.stemmer].stem(k)),
     scorso: vocabulary.previous.map((k) => natural[textProcessor.stemmer].stem(k)),
@@ -58,7 +53,22 @@ export default function extractDates(
     mesi: vocabulary.months.map((k) => natural[textProcessor.stemmer].stem(k)),
     giorniSettimana: vocabulary.weekDays.map((k) => natural[textProcessor.stemmer].stem(k)),
     anno: vocabulary.year.map((k) => natural[textProcessor.stemmer].stem(k)),
+    dopo: vocabulary.after.map((k) => natural[textProcessor.stemmer].stem(k)),
+    prima: vocabulary.before.map((k) => natural[textProcessor.stemmer].stem(k)),
+    dopoDomani: vocabulary.afterTomorrow.map((k) => natural[textProcessor.stemmer].stem(k)),
+    altroIeri: vocabulary.beforeYesterday.map((k) => natural[textProcessor.stemmer].stem(k)),
+    traFra: vocabulary.within.map((k) => natural[textProcessor.stemmer].stem(k)),
+    fa: vocabulary.ago.map((k) => natural[textProcessor.stemmer].stem(k)),
+    giorno: vocabulary.day.map((k) => natural[textProcessor.stemmer].stem(k)),
+    ultimo: vocabulary.last.map((k) => natural[textProcessor.stemmer].stem(k)),
   };
+
+  textProcessor.numeri = vocabulary.numbers.map((k) => natural[textProcessor.stemmer].stem(k));
+
+  const tokens = adjust(data, textProcessor);
+  const today = getTZDate(now, timeZone);
+  const dates = new Map();
+  const ranges = new Map();
 
   (sequence ?? extractorSequence).forEach((seq) =>
     extractors[seq]({ tokens, today, dates, ranges, stripChar, vocabolario, verbose })
