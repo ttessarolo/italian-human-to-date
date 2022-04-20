@@ -62,7 +62,7 @@ export default function relativePeriod({
 
         // Add found tokens to strips
         strips.add(k);
-        strips = new Set([...strips, ...prossimoIndex]);
+        strips = new Set([...strips, ...ultimoIndex]);
       }
     }
 
@@ -91,7 +91,7 @@ export default function relativePeriod({
 
         // Add found tokens to strips
         strips.add(k);
-        strips = new Set([...strips, ...prossimoIndex]);
+        strips = new Set([...strips, ...ultimoIndex]);
       }
     }
 
@@ -130,7 +130,7 @@ export default function relativePeriod({
 
         // Add found tokens to strips
         strips.add(k);
-        strips = new Set([...strips, ...prossimoIndex]);
+        strips = new Set([...strips, ...ultimoIndex]);
       }
     }
   }

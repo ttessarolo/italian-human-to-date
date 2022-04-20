@@ -53,7 +53,7 @@ export default function relativeRange({
             break;
         }
 
-        strips = new Set([...strips, k, prossimoIndex]);
+        strips = new Set([...strips, ...index, k, ...prossimoIndex]);
       } else if (ultimoIndex.length > 0) {
         switch (type) {
           case 'd':
@@ -70,7 +70,7 @@ export default function relativeRange({
             break;
         }
 
-        strips = new Set([...strips, k, ultimoIndex]);
+        strips = new Set([...strips, ...index, k, ...ultimoIndex]);
       }
     }
   }
