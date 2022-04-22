@@ -16,7 +16,12 @@
     "type": "git",
     "url": "git+https://github.com/ttessarolo/italian-human-to-date.git"
   },
-  "keywords": [],
+  "keywords": [
+    "italian",
+    "human",
+    "dates",
+    "humanize"
+  ],
   "author": "Tommaso Tessarolo <ttessarolo@gmail.com>",
   "license": "ISC",
   "bugs": {
