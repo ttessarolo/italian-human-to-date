@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.0.7](https://bitbucket.org/ttessarolo/italian-human-to-date/branches/compare/v0.0.6%0Dv0.0.7) (2022-04-22)
+
+
+### Features
+
+* readme file added ([3768fa1](https://github.com/ttessarolo/italian-human-to-date/commits/3768fa1fa04134c40b4c4af4b9daf7d62f4a45d3))
+
 ### [0.0.6](https://bitbucket.org/ttessarolo/italian-human-to-date/branches/compare/v0.0.5%0Dv0.0.6) (2022-04-20)
 
 
