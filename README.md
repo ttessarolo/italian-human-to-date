@@ -10,20 +10,6 @@ Convert Italian language strings to Javascript dates.
 - Returns a range of dates if the original text contains a time period (e.g. the last month)
 - Can receive a readable stream as input and writable stream for output
 
-## Table of Content
-
-<!-- TOC -->
-
-- [Installation](#installation)
-- [Basic Example](#basic-example)
-- [Multiple Example](#multiple-example)
-- [Constructor](#constructor)
-  - [Params Object](#params-object)
-- [Extract Method](#extract-method)
-  - [Events](#events)
-
-<!-- /TOC -->
-
 ## Installation
 
 <a id="markdown-installation" name="installation"></a>
@@ -235,11 +221,56 @@ And it can be configured with the following parameters:
 </tbody>
 </table>
 
+### Return Object
+
+The extract method returns an object for each input string. The object has the following values:
+
+<table>
+<tr>
+<th>Key</th><th>Description</th><th>Example</th>
+</tr>
+<tbody>
+<tr>
+    <td style="vertical-align:top"><b>origin</b></td>
+    <td style="vertical-align:top">The original string</td>
+    <td style="vertical-align:top"><b>prossimi sei mesi</b></td>
+</tr>
+<tr>
+    <td style="vertical-align:top"><b>dates</b></td>
+    <td style="vertical-align:top">Array of extracted JS dates</td>
+    <td style="vertical-align:top"><b>[ 2021-03-25T23:00:00.000Z, 2022-04-15T22:00:00.000Z ]</b></td>
+</tr>
+<tr>
+    <td style="vertical-align:top"><b>ranges</b></td>
+    <td style="vertical-align:top">Array of object of Date Ranges extracted</td>
+    <td style="vertical-align:top"><b></b>[
+    { start: 2022-04-19T22:00:00.000Z, end: 2022-10-31T22:59:59.999Z }
+  ]</b></td>
+</tr>
+<tr>
+    <td style="vertical-align:top"><b>adjustedTokes</b></td>
+    <td style="vertical-align:top">An Array of tokes after text processing</td>
+    <td style="vertical-align:top"><b>[ 'prossim', '6', 'mes' ]</b></td>
+</tr>
+<tr>
+    <td style="vertical-align:top"><b>residualTokens</b></td>
+    <td style="vertical-align:top">An Array of tokes not considered for date extraction</td>
+    <td style="vertical-align:top"><b>[ 'event' ]</b></td>
+</tr>
+<tr>
+    <td style="vertical-align:top"><b>usedTokens</b></td>
+    <td style="vertical-align:top">An Array of tokes considered for date extraction</td>
+    <td style="vertical-align:top"><b>[ 'prossim', '6', 'mes' ]</b></td>
+</tr>
+
+</tbody>
+</table>
+
 ### Events
 
 <a id="markdown-events" name="events"></a>
 
-L'Extractor emette un evento con label "data" ad ogni estrazione di dato
+The Extractor emits an event with label "date" at each data extraction
 
 ```javascript
 DE.on('data', (data) => {
