@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.0.9](https://bitbucket.org/ttessarolo/italian-human-to-date/branches/compare/v0.0.8%0Dv0.0.9) (2022-04-22)
+
+
+### Others
+
+* added Return Object in readme.md ([eb815d1](https://github.com/ttessarolo/italian-human-to-date/commits/eb815d16abae6d677cb3af6f2827c4407786a9ae))
+
 ### [0.0.8](https://bitbucket.org/ttessarolo/italian-human-to-date/branches/compare/v0.0.7%0Dv0.0.8) (2022-04-22)
 
 
