@@ -25,21 +25,6 @@ export {
   italianDateTerms,
   extractorSequence,
 };
-
-// {vocabulary: italianDateTerms,
-// stripChar: '≈',
-// verbose: false,
-// textProcessor: {
-//   stemmer: 'PorterStemmerIt',
-//   stopwords: true,
-//   duplicate: false,
-//   diacritics: true,
-//   punctuation: true,
-//   lowercase: true,
-//   trim: true,
-//   tokenize: true,
-// }
-
 export default class DateExtractor extends Events {
   constructor({
     now,
