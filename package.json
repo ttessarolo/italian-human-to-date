@@ -1,7 +1,7 @@
 {
   "name": "italian-human-to-date",
   "version": "0.0.9",
-  "description": "",
+  "description": "Convert Italian language strings to Javascript dates",
   "main": "index.js",
   "type": "module",
   "scripts": {
