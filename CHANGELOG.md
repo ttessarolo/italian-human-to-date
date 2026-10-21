@@ -2,6 +2,18 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### 0.0.11 (2026-10-21)
+
+### Bug Fixes
+
+* Bound weekday searches and leave impossible days or dates in the residual text.
+* Correct Monday–Sunday week ranges, Gregorian leap days, and Rome calendar/DST behavior across host timezones.
+* Validate reference dates and timezones, preserve caller-owned `Date` values, and fix date/range identity and ordering.
+
+### Tests
+
+* Include independent calendar and timezone oracles in `npm test`, verified under both `TZ=Europe/Rome` and `TZ=UTC`.
+
 ### [0.0.10](https://bitbucket.org/ttessarolo/italian-human-to-date/branches/compare/v0.0.9%0Dv0.0.10) (2022-04-26)
 
 
