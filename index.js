@@ -11,7 +11,7 @@ import adjust, {
   trimWords,
   stringToNumber,
 } from './lib/adjust.js';
-import { getTZDate } from './lib/dateUtils.js';
+import { getTZDate, getWallDate, wallToZonedDate } from './lib/dateUtils.js';
 import { italianDateTerms, extractorSequence } from './defaults.js';
 
 export {
@@ -70,7 +70,9 @@ export default class DateExtractor extends Events {
     textProcessor.numeri = vocabulary.numbers.map((k) => natural[textProcessor.stemmer].stem(k));
 
     this.textProcessor = textProcessor;
+    this.timeZone = timeZone ?? 'Europe/Rome';
     this.now = getTZDate(now, timeZone);
+    this.dateTerms = new Set(Object.values(this.vocabolario).flat());
     this.sequence = sequence;
     this.stripChar = stripChar;
     this.verbose = verbose;
@@ -86,7 +88,8 @@ export default class DateExtractor extends Events {
 
   async extract(ingress, { now, timeZone, cb, outStream } = {}) {
     const results = [];
-    const today = now ? getTZDate(now, timeZone) : this.now;
+    const zone = timeZone ?? this.timeZone;
+    const today = getWallDate(now === undefined ? this.now : now, zone);
     const isAsync = cb || outStream;
     const [rows, isMultiple] = (() => {
       if (Array.isArray(ingress)) return [ingress, true];
@@ -99,10 +102,14 @@ export default class DateExtractor extends Events {
       const tokens = adjust(data, this.textProcessor);
       const adjustedTokes = [...tokens];
 
-      (this.sequence ?? extractorSequence).forEach((seq) =>
+      // Every built-in extractor needs a vocabulary term or a digit. Keep custom
+      // sequence behavior intact by only skipping when the token set is inert.
+      const mayContainDate = tokens.some((token) => /\d/.test(token) || this.dateTerms.has(token));
+      if (mayContainDate) (this.sequence ?? extractorSequence).forEach((seq) =>
         extractors[seq]({
           tokens,
           today,
+          timeZone: zone,
           dates,
           ranges,
           stripChar: this.stripChar,
@@ -111,7 +118,8 @@ export default class DateExtractor extends Events {
         })
       );
 
-      const date = [...dates.values()].sort();
+      const date = [...dates.values()].sort((a, b) => a.getTime() - b.getTime())
+        .map((value) => wallToZonedDate(value, zone));
 
       if (this.verbose) console.log(date.map((d) => d.toString()));
 
@@ -119,7 +127,10 @@ export default class DateExtractor extends Events {
       const ret = {
         origin: data,
         dates: date,
-        ranges: [...ranges.values()],
+        ranges: [...ranges.values()].map(({ start, end }) => ({
+          start: wallToZonedDate(start, zone),
+          end: wallToZonedDate(end, zone),
+        })),
         adjustedTokes,
         residualTokens,
         usedTokens: adjustedTokes.filter((k) => !residualTokens.includes(k)),

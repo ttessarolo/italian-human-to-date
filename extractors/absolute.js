@@ -1,6 +1,6 @@
 'use strict';
 
-import { getTZDate, addDate } from '../lib/dateUtils.js';
+import { civilDate, validCalendarDate, addDate } from '../lib/dateUtils.js';
 import { strip } from '../lib/utils.js';
 
 export default function extractAbsoluteDate({
@@ -20,32 +20,31 @@ export default function extractAbsoluteDate({
 
     const monthsIndex = mesi.findIndex((m) => m === token);
     if (monthsIndex > -1) {
-      strips.add(k);
       let day = 1;
-      let year = today.getYear() + 1900 - (monthsIndex > today.getMonth() ? 1 : 0);
+      let year = today.getFullYear() - (monthsIndex > today.getMonth() ? 1 : 0);
 
       // Find day
-      const d = Number(tokens[k - 1]);
-      if (!isNaN(d)) {
-        if (d > 0 && d <= 31) {
-          day = d;
-          strips.add(k - 1);
-        }
+      const dayToken = tokens[k - 1];
+      const hasDay = typeof dayToken === 'string' && /^-?\d+$/.test(dayToken);
+      if (hasDay) {
+        day = Number(dayToken);
       }
 
       // Find year
-      const y = Number(tokens[k + 1]);
-      const yNow = String(today.getYear() + 1900);
-      if (!isNaN(y)) {
-        if (y > 1900 || yNow.includes(y)) {
-          year = y;
-          strips.add(k + 1);
-        }
+      const yearToken = tokens[k + 1];
+      const hasYear = typeof yearToken === 'string' && /^\d{4}$/.test(yearToken);
+      if (hasYear) {
+        year = Number(yearToken);
       }
 
-      const date = getTZDate(`${monthsIndex + 1}/${day}/${year}`);
+      // An explicit impossible date must remain text, including its month.
+      if (!validCalendarDate(year, monthsIndex + 1, day)) continue;
+      const date = civilDate(year, monthsIndex + 1, day);
 
       addDate(date, dates);
+      strips.add(k);
+      if (hasDay) strips.add(k - 1);
+      if (hasYear) strips.add(k + 1);
 
       if (verbose) {
         console.log('************ ABSOLUTE ***************');

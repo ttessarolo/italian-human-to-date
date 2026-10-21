@@ -5,7 +5,7 @@
   "main": "index.js",
   "type": "module",
   "scripts": {
-    "test": "ava test/*.js",
+    "test": "ava test/*.js && node --test test-node/*.test.js",
     "coverage": "nyc report --reporter=text-lcov > coverage.lcov && codecov",
     "commit": "git add . && git-cz",
     "version": "standard-version",
