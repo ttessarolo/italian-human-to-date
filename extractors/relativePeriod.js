@@ -10,6 +10,8 @@ import {
   endOfYear,
   subDays,
   addDays,
+  subYears,
+  addYears,
 } from 'date-fns';
 import { addDateRange } from '../lib/dateUtils.js';
 import { strip, getIndexes } from '../lib/utils.js';
@@ -39,7 +41,7 @@ export default function relativePeriod({
 
     if (annoIndex > -1) {
       if (scorsoIndex.length > 0) {
-        let start = subDays(today, 365);
+        let start = subYears(today, 1);
         start = startOfYear(start);
 
         addDateRange(start, endOfYear(start), ranges);
@@ -48,7 +50,7 @@ export default function relativePeriod({
         strips.add(k);
         strips = new Set([...strips, ...scorsoIndex]);
       } else if (prossimoIndex.length > 0) {
-        let start = addDays(today, 365);
+        let start = addYears(today, 1);
         start = startOfYear(start);
 
         addDateRange(start, endOfYear(start), ranges);
@@ -57,7 +59,7 @@ export default function relativePeriod({
         strips.add(k);
         strips = new Set([...strips, ...prossimoIndex]);
       } else if (ultimoIndex.length > 0) {
-        let start = subDays(today, 365);
+        let start = subYears(today, 1);
         addDateRange(start, today, ranges);
 
         // Add found tokens to strips
@@ -69,7 +71,7 @@ export default function relativePeriod({
     if (weekIndex > -1) {
       if (scorsoIndex.length > 0) {
         let start = startOfWeek(today, { weekStartsOn: 1 });
-        start = subDays(start, 6);
+        start = subDays(start, 7);
 
         addDateRange(start, endOfWeek(start, { weekStartsOn: 1 }), ranges);
 
@@ -78,7 +80,7 @@ export default function relativePeriod({
         strips = new Set([...strips, ...scorsoIndex]);
       } else if (prossimoIndex.length > 0) {
         let start = startOfWeek(today, { weekStartsOn: 1 });
-        start = addDays(start, 8);
+        start = addDays(start, 7);
 
         addDateRange(start, endOfWeek(start, { weekStartsOn: 1 }), ranges);
 

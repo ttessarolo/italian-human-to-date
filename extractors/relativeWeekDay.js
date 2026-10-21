@@ -13,23 +13,24 @@ export default function extractAbsoluteDate({
   vocabolario: { prossimo, scorso, ieri, oggi, domani, settimana, mese, mesi, giorniSettimana },
 }) {
   let strips = new Set();
+  const scorsoIndex = getIndexes(tokens, scorso);
+  const prossimoIndex = getIndexes(tokens, prossimo);
 
   for (let k = 0, length = tokens.length; k < length; k++) {
     const token = tokens[k];
 
     if (token === stripChar) continue;
 
-    const scorsoIndex = getIndexes(tokens, scorso);
-    const prossimoIndex = getIndexes(tokens, prossimo);
     const dayIndex = giorniSettimana.findIndex((w) => w === token);
 
-    if (dayIndex > -1 && !strips.has(dayIndex)) {
-      strips.add(k);
+    if (dayIndex > -1 && !strips.has(k)) {
+      const next = k + 1;
+      const nextToken = tokens[next];
+      const hasDay = typeof nextToken === 'string' && /^-?\d+$/.test(nextToken);
+      const day = hasDay ? Number(nextToken) : undefined;
+      if (hasDay && (!Number.isInteger(day) || day < 1 || day > 31)) continue;
 
       const weekDay = today.getDay();
-
-      // Add found tokens to strips
-      strips = new Set([...strips, ...scorsoIndex, ...prossimoIndex]);
 
       // Determine if relative is in past
       const direction = (() => {
@@ -49,21 +50,12 @@ export default function extractAbsoluteDate({
       })();
 
       // weekDay with day number specified
-      const day = (() => {
-        const next = k + 1;
-
-        if (!strips.has(next)) {
-          const d = Number(tokens[next]);
-          if (!isNaN(d)) {
-            strips.add(next);
-            return d;
-          }
-        }
-      })();
-
       const date = findDate({ today, weekDay: dayIndex, day, direction });
-
+      if (!date) continue;
       addDate(date, dates);
+      strips.add(k);
+      if (hasDay) strips.add(next);
+      strips = new Set([...strips, ...scorsoIndex, ...prossimoIndex]);
 
       if (verbose) {
         console.log('************ WEEK DAY ***************');
